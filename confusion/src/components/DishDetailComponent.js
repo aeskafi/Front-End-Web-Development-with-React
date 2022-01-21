@@ -3,13 +3,13 @@ import {Card, CardImg, CardText, CardBody, CardTitle} from 'reactstrap';
 
 class DishDetail extends Component {
 
-    constructor( props ) {
-        super( props );
-
-        this.state = {
-        }
+    componentDidMount () {
+        console.log( 'DishDetail Component componentDidMount invoked!' );
     }
 
+    componentDidUpdate () {
+        console.log( 'DishDetail Component componentDidUpdate invoked!' );
+    }
 
     renderDish ( dish ) {
         if ( dish != null ) {
@@ -52,6 +52,7 @@ class DishDetail extends Component {
     }
 
     render () {
+        console.log( 'DishDetail Component render invoked!' );
         if ( this.props.dish != null ) {
             return (
                 <div className="container">
