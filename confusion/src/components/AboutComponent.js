@@ -5,9 +5,9 @@ import {Link} from 'react-router-dom';
 function RenderLeader ( {leaders} ) {
     return (
         <Media list>
-            {leaders.map( ( leader ) => {
+            {leaders.map( ( leader, index ) => {
                 return (
-                    <Media tag="li" className="col-12 row">
+                    <Media tag="li" className="col-12 row" key={index}>
                         <Media left middle className="col-2 m-1">
                             <Media object src={leader.image} alt={leader.name} />
                         </Media>

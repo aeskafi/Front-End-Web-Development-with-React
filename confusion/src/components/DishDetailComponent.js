@@ -37,9 +37,8 @@ class CommentForm extends Component {
     }
 
     handleSubmit ( values ) {
-        console.log( "Current State is: " + JSON.stringify( values ) );
-        alert( "Current State is: " + JSON.stringify( values ) );
         this.toggleModal();
+        this.props.addComment( this.props.dishId, values.rating, values.author, values.comment );
     }
 
     render () {
@@ -68,9 +67,9 @@ class CommentForm extends Component {
                                 </Col>
                             </Row>
                             <Row className="form-group">
-                                <Label htmlFor="yourname">Your Name</Label>
+                                <Label htmlFor="author">Your Name</Label>
                                 <Col>
-                                    <Control.text model=".yourname" id="yourname" name="yourname"
+                                    <Control.text model=".author" id="author" name="author"
                                         placeholder="Your Name"
                                         className="form-control"
                                         validators={{
@@ -79,7 +78,7 @@ class CommentForm extends Component {
                                     />
                                     <Errors
                                         className="text-danger"
-                                        model=".yourname"
+                                        model=".author"
                                         show="touched"
                                         messages={{
                                             required: 'Required, ',
@@ -130,11 +129,11 @@ function RenderDish ( {dish} ) {
     } else return ( <div></div> );
 }
 
-function RenderComments ( {comments} ) {
+function RenderComments ( {comments, addComment, dishId} ) {
     if ( comments != null ) {
         const tmp = comments.map( ( comment ) => {
             return (
-                <div key={comment.id} className="col-12 col-md-5 m-1">
+                <div key={comment.id} className="col-12 col-md-7 m-1">
                     <div className="row">
                         <p style={{fontWeight: 600}}>{comment.comment}</p>
                     </div>
@@ -150,7 +149,7 @@ function RenderComments ( {comments} ) {
                 <ul className='list-unstyled'>
                     {tmp}
                 </ul>
-                <CommentForm />
+                <CommentForm dishId={dishId} addComment={addComment} />
             </div>
         )
     } else return ( <div></div> );
@@ -173,7 +172,9 @@ const DishDetail = ( props ) => {
                 </div>
                 <div className="row">
                     <RenderDish dish={props.dish} />
-                    <RenderComments comments={props.comments} />
+                    <RenderComments comments={props.comments}
+                        addComment={props.addComment}
+                        dishId={props.dish.id} />
                 </div>
             </div>
         )
@@ -181,74 +182,3 @@ const DishDetail = ( props ) => {
 }
 
 export default DishDetail;
-
-// const RenderDish = ( {dish} ) => {
-//     if ( dish != null ) {
-//         return ( <div className="col-12 col-md-5 m-1">
-//             <Card>
-//                 <CardImg width="100%" src={dish.image} alt={dish.name} />
-//                 <CardBody>
-//                     <CardTitle style={{fontWeight: 600}}>{dish.name}</CardTitle>
-//                     <CardText>{dish.description}</CardText>
-//                 </CardBody>
-//             </Card>
-//         </div> )
-//     } else return ( <div></div> );
-// }
-
-// const RenderComments = ( {comments} ) => {
-//     if ( comments != null ) {
-//         const tmp = comments.map( ( comment ) => {
-//             return (
-//                 <div key={comment.id} className="col-12 col-md-5 m-1">
-//                     <div className="row">
-//                         <p style={{fontWeight: 600}}>{comment.comment}</p>
-//                     </div>
-//                     <div className="row">
-//                         <p style={{fontWeight: 600}}>-- {comment.author}, {new Intl.DateTimeFormat( 'en-US', {year: 'numeric', month: 'short', day: '2-digit'} ).format( new Date( Date.parse( comment.date ) ) )}</p>
-//                     </div>
-//                 </div>
-//             );
-//         } );
-//         return (
-//             <div className='col-12 col-md-5 m-1'>
-//                 <h1> Comments </h1>
-//                 <ul className='list-unstyled'>
-//                     {tmp}
-//                 </ul>
-
-//             </div>
-//         )
-//     } else return ( <div></div> );
-// }
-// const DishDetail =  {
-
-//     render () {
-
-
-//         if ( this.props.dish != null ) {
-//             return (
-//                 <div className="container">
-//                     <div className="row">
-//                         <Breadcrumb>
-//                             <BreadcrumbItem>Home</BreadcrumbItem>
-//                             <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
-//                             <BreadcrumbItem active>{this.props.dish.name}</BreadcrumbItem>
-//                         </Breadcrumb>
-//                         <div className="col-12">
-//                             <h3>{this.props.dish.name}</h3>
-//                             <hr />
-//                         </div>
-//                     </div>
-//                     <div className="row">
-//                         <RenderDish dish={this.props.dish} />
-//                         <RenderComments comments={this.props.comments} />
-//                     </div>
-//                     <CommentForm />
-//                 </div>
-//             )
-//         } else return ( <div></div> )
-//     }
-// }
-
-// export default DishDetail;
