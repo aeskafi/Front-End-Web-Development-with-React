@@ -1,25 +1,43 @@
 import React from 'react';
 import {Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media} from 'reactstrap';
 import {Link} from 'react-router-dom';
+import {Loading} from './LoadingComponent';
+import {baseUrl} from '../shared/baseUrl';
+import {FadeTransform, Fade, Stagger} from 'react-animation-components';
 
-function RenderLeader ( {leaders} ) {
-    return (
-        <Media list>
-            {leaders.map( ( leader, index ) => {
-                return (
-                    <Media tag="li" className="col-12 row" key={index}>
-                        <Media left middle className="col-2 m-1">
-                            <Media object src={leader.image} alt={leader.name} />
-                        </Media>
-                        <Media body className="col-9 m-2">
-                            <Media heading>{leader.name}</Media>
-                            <p>{leader.designation}</p>
-                            <p>{leader.description}</p>
-                        </Media>
-                    </Media>
-                )
-            } )}
-        </Media>
+function RenderLeader ( {leaders, isLoading, errMess} ) {
+    if ( isLoading ) {
+        return <Loading />
+    } else if ( errMess ) {
+        return (
+            <h4>{errMess}</h4>
+        )
+    } else return (
+        <FadeTransform in
+            transformProps={{
+                exitTransform: 'opacity(0.5)'
+            }}>
+            <Media list>
+                {leaders.map( ( leader, index ) => {
+                    return (
+                        <Stagger in>
+                            <Fade>
+                                <Media tag="li" className="col-12 row" key={index}>
+                                    <Media left middle className="col-2 m-1">
+                                        <Media object src={baseUrl + leader.image} alt={leader.name} />
+                                    </Media>
+                                    <Media body className="col-9 m-2">
+                                        <Media heading>{leader.name}</Media>
+                                        <p>{leader.designation}</p>
+                                        <p>{leader.description}</p>
+                                    </Media>
+                                </Media>
+                            </Fade>
+                        </Stagger>
+                    )
+                } )}
+            </Media>
+        </FadeTransform>
     )
 }
 
@@ -80,7 +98,10 @@ function About ( props ) {
                     <h2>Corporate Leadership</h2>
                 </div>
                 <div className="col-12">
-                    <RenderLeader leaders={props.leaders} />
+                    <RenderLeader
+                        leaders={props.leaders.leaders}
+                        isLoading={props.leaders.isLoading}
+                        errMess={props.leaders.errMess} />
                 </div>
             </div>
         </div>
