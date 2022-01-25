@@ -19,6 +19,7 @@ import {Link} from 'react-router-dom';
 import {Control, LocalForm, Errors} from 'react-redux-form';
 import {Loading} from './LoadingComponent'
 import {baseUrl} from '../shared/baseUrl';
+import {FadeTransform, Fade, Stagger} from 'react-animation-components';
 
 const required = ( val ) => val && val.length;
 const maxLength = ( len ) => ( val ) => !( val ) || ( val.length <= len );
@@ -120,13 +121,18 @@ class CommentForm extends Component {
 function RenderDish ( {dish} ) {
     if ( dish != null ) {
         return ( <div className="col-12 col-md-5 m-1">
-            <Card>
-                <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
-                <CardBody>
-                    <CardTitle style={{fontWeight: 600}}>{dish.name}</CardTitle>
-                    <CardText>{dish.description}</CardText>
-                </CardBody>
-            </Card>
+            <FadeTransform in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
+                <Card>
+                    <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
+                    <CardBody>
+                        <CardTitle style={{fontWeight: 600}}>{dish.name}</CardTitle>
+                        <CardText>{dish.description}</CardText>
+                    </CardBody>
+                </Card>
+            </FadeTransform>
         </div> )
     } else return ( <div></div> );
 }
@@ -135,21 +141,25 @@ function RenderComments ( {comments, postComment, dishId} ) {
     if ( comments != null ) {
         const tmp = comments.map( ( comment ) => {
             return (
-                <div key={comment.id} className="col-12 col-md-7 m-1">
-                    <div className="row">
-                        <p style={{fontWeight: 600}}>{comment.comment}</p>
+                <Fade in>
+                    <div key={comment.id} className="col-12 col-md-7 m-1">
+                        <div className="row">
+                            <p style={{fontWeight: 600}}>{comment.comment}</p>
+                        </div>
+                        <div className="row">
+                            <p style={{fontWeight: 600}}>-- {comment.author}, {new Intl.DateTimeFormat( 'en-US', {year: 'numeric', month: 'short', day: '2-digit'} ).format( new Date( Date.parse( comment.date ) ) )}</p>
+                        </div>
                     </div>
-                    <div className="row">
-                        <p style={{fontWeight: 600}}>-- {comment.author}, {new Intl.DateTimeFormat( 'en-US', {year: 'numeric', month: 'short', day: '2-digit'} ).format( new Date( Date.parse( comment.date ) ) )}</p>
-                    </div>
-                </div>
+                </Fade>
             );
         } );
         return (
             <div className='col-12 col-md-5 m-1'>
                 <h1> Comments </h1>
                 <ul className='list-unstyled'>
-                    {tmp}
+                    <Stagger in>
+                        {tmp}
+                    </Stagger>
                 </ul>
                 <CommentForm dishId={dishId} postComment={postComment} />
             </div>
